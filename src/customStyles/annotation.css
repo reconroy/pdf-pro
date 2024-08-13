@@ -1,0 +1,32 @@
+.pdf-viewer-container {
+    height: 600px;
+    border: 1px solid #ddd;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .pdf-viewer-container {
+        height: 400px; 
+    }
+}
+
+/* .pdf-viewer-container {
+    position: relative;
+    height: 600px; 
+    overflow: hidden; 
+  }
+  
+  .pdf-viewer-container .rpv-core__viewer {
+    transform: scale(1.1); 
+    transform-origin: 0 0; 
+  }
+  
+  .pdf-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  } */
+  

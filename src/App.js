@@ -5,6 +5,7 @@ import Annotation from './components/Annotation';
 import Navbar from './components/Navbar';
 import Upload from './components/Upload';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import "./customStyles/annotation.css"
 // or use the local path
 // pdfjs.GlobalWorkerOptions.workerSrc = `${process.env.PUBLIC_URL}/pdf.worker.min.js`;
 
