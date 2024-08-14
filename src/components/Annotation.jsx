@@ -14,7 +14,6 @@ const Annotation = () => {
   const pdfRefs = useRef([]);
   const [hoverTextData, setHoverTextData] = useState({ text: '', pageNum: -1 });
 
-  // Extract text from PDF and store data
   useEffect(() => {
     const extractTextFromPdf = async (file, index) => {
       const loadingTask = pdfjs.getDocument(URL.createObjectURL(file));
@@ -26,9 +25,10 @@ const Annotation = () => {
         textPromises.push(
           pdf.getPage(pageNum).then(async (page) => {
             const textContent = await page.getTextContent();
+            console.log(`Page ${pageNum} text content:`, textContent.items);
             const textItems = textContent.items.map(item => ({
               str: item.str,
-              bbox: item.transform // Bounding box of the text
+              bbox: item.transform
             }));
             return { pageNum, textItems };
           })
@@ -46,12 +46,11 @@ const Annotation = () => {
     files.forEach((file, index) => extractTextFromPdf(file, index));
   }, [files]);
 
-  // Handle mouse over event to synchronize PDFs
   const handleMouseOver = useCallback((text, pageNum) => {
+    console.log('Handling mouse over:', text, pageNum);
     setHoverTextData({ text, pageNum });
   }, []);
 
-  // Scroll and highlight text in all PDFs
   useEffect(() => {
     if (!hoverTextData.text) return;
 
@@ -67,11 +66,11 @@ const Annotation = () => {
           if (matchingPositions.length > 0) {
             const pageTextElements = page.querySelectorAll('div');
             pageTextElements.forEach(el => {
-              if (el.innerText === text) {
-                el.style.backgroundColor = 'yellow'; // Highlight the text
-                el.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll to the element
+              if (el.innerText.trim().toLowerCase() === text.trim().toLowerCase()) {
+                el.style.backgroundColor = 'yellow';
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
               } else {
-                el.style.backgroundColor = ''; // Remove highlight if not matched
+                el.style.backgroundColor = '';
               }
             });
           }
@@ -80,11 +79,11 @@ const Annotation = () => {
     });
   }, [hoverTextData, textDataRefs]);
 
-  // Get column size based on the number of files
   const getColSize = () => {
-    if (files.length === 2) return 6; // Pair of 2 PDFs
-    if (files.length === 4) return 3; // Pair of 4 PDFs
-    return 12; // Single PDF or fallback
+    if (files.length === 2) return 6;
+    if (files.length === 3) return 4;
+    if (files.length === 4) return 3;
+    return 12;
   };
 
   return (
@@ -112,6 +111,7 @@ const Annotation = () => {
                           textElement.style.top = `${item.transform[5]}px`;
                           textElement.style.backgroundColor = 'rgba(255, 255, 0, 0.5)';
                           textElement.style.cursor = 'pointer';
+                          textElement.style.border = '1px solid red'; // For visibility
                           textElement.addEventListener('mouseover', () => handleMouseOver(item.str, page.pageNumber));
                           page.viewport.appendChild(textElement);
                         });
